@@ -36,7 +36,7 @@ class Login extends Component {
     await getAPIToken();
     history.push('/game');
   };
- 
+
   handleSettings = () => {
     const { history } = this.props;
     history.push('/settings');
