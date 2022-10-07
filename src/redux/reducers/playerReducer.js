@@ -1,3 +1,5 @@
+import { SAVE_PLAYER } from '../action';
+
 const INITIAL_STATE = {
   name: '',
   assertions: '',
@@ -7,6 +9,11 @@ const INITIAL_STATE = {
 
 const playerReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+  case SAVE_PLAYER:
+    return {
+      ...state,
+      ...action.payload,
+    };
   default: return state;
   }
 };
