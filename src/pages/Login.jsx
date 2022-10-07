@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import getAPIToken from '../helpers/getAPIToken';
-import PropTypes from 'prop-types';
 
 class Login extends Component {
   state = {
