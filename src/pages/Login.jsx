@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import getAPIToken from '../helpers/getAPIToken';
+import { savePlayer } from '../redux/action';
 
 class Login extends Component {
   state = {
@@ -32,8 +34,10 @@ class Login extends Component {
   };
 
   handleBtn = async () => {
-    const { history } = this.props;
+    const { history, dispatch } = this.props;
+    const { email, name } = this.state;
     await getAPIToken();
+    dispatch(savePlayer({ gravatarEmail: email, name }));
     history.push('/game');
   };
 
@@ -87,7 +91,8 @@ class Login extends Component {
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
-  }).isRequired,
-};
+  }),
+  dispatch: PropTypes.func,
+}.isRequired;
 
-export default Login;
+export default connect()(Login);
