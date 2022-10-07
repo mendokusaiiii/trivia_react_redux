@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import getAPIToken from '../helpers/getAPIToken';
 
 class Login extends Component {
   state = {
@@ -10,7 +11,8 @@ class Login extends Component {
 
   verify = () => {
     const { name, email } = this.state;
-    if (name && email) {
+    const re = /\S+@\S+\.\S+/;
+    if (name && re.test(email)) {
       this.setState({ isBtnDisabled: false });
     } else {
       this.setState({ isBtnDisabled: true });
@@ -29,6 +31,12 @@ class Login extends Component {
     console.log('teste');
   };
 
+  handleBtn = async () => {
+    const { history } = this.props;
+    await getAPIToken();
+    history.push('/game');
+  };
+
   handleSettings = () => {
     const { history } = this.props;
     history.push('/settings');
@@ -45,6 +53,7 @@ class Login extends Component {
           id="name"
           value={ name }
           onChange={ this.handleChanges }
+          placeholder="nome"
         />
         <input
           type="text"
@@ -53,11 +62,13 @@ class Login extends Component {
           id="email"
           value={ email }
           onChange={ this.handleChanges }
+          placeholder="email"
         />
         <button
           data-testid="btn-play"
           type="submit"
           disabled={ isBtnDisabled }
+          onClick={ this.handleBtn }
         >
           Play
         </button>
@@ -74,7 +85,9 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  history: PropTypes.string,
-}.isRequired;
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 export default Login;
