@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import getAPIToken from '../helpers/getAPIToken';
+import PropTypes from 'prop-types';
 
 class Login extends Component {
   state = {
@@ -31,10 +32,16 @@ class Login extends Component {
     console.log('teste');
   };
 
+
   handleBtn = async () => {
     const { history } = this.props;
     await getAPIToken();
     history.push('/game');
+  };
+ 
+  handleSettings = () => {
+    const { history } = this.props;
+    history.push('/settings');
   };
 
   render() {
@@ -66,6 +73,13 @@ class Login extends Component {
           onClick={ this.handleBtn }
         >
           Play
+        </button>
+        <button
+          data-testid="btn-settings"
+          type="button"
+          onClick={ this.handleSettings }
+        >
+          Settings
         </button>
       </form>
     );

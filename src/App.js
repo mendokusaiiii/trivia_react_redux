@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import './App.css';
 import Login from './pages/Login';
 import Game from './pages/Game';
+import Settings from './pages/Settings';
 
 export default function App() {
   return (
@@ -16,6 +17,11 @@ export default function App() {
         exact
         path="/game"
         render={ (props) => <Game { ...props } /> }
+      />
+      <Route
+        exact
+        path="/settings"
+        render={ (props) => <Settings { ...props } /> }
       />
     </Switch>
   );
