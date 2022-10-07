@@ -31,7 +31,6 @@ class Login extends Component {
     console.log('teste');
   };
 
-
   handleBtn = async () => {
     const { history } = this.props;
     await getAPIToken();
