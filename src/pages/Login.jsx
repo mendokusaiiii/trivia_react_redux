@@ -28,12 +28,7 @@ class Login extends Component {
     }, this.verify);
   };
 
-  submitForm = (event) => {
-    event.preventDefault();
-    console.log('teste');
-  };
-
-  handleBtn = async () => {
+  handleBtnPlay = async () => {
     const { history, dispatch } = this.props;
     const { email, name } = this.state;
     await getAPIToken();
@@ -49,7 +44,7 @@ class Login extends Component {
   render() {
     const { email, name, isBtnDisabled } = this.state;
     return (
-      <form onSubmit={ this.submitForm }>
+      <form>
         <input
           type="text"
           name="name"
@@ -70,9 +65,9 @@ class Login extends Component {
         />
         <button
           data-testid="btn-play"
-          type="submit"
+          type="button"
           disabled={ isBtnDisabled }
-          onClick={ this.handleBtn }
+          onClick={ this.handleBtnPlay }
         >
           Play
         </button>
