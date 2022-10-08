@@ -27,6 +27,7 @@ class Game extends Component {
     const { results } = this.props;
     const counter = 0;
     let alternatives = [];
+    // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array randomizar um array
     if (results[counter]) {
       alternatives = [
         results[counter].correct_answer, ...results[counter].incorrect_answers,
