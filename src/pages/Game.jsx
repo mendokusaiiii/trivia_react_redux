@@ -15,6 +15,7 @@ class Game extends Component {
     counter: 0,
     difficulty: '',
     correctAnswer: '',
+    responded: false,
   };
 
   componentDidMount() {
@@ -55,13 +56,18 @@ class Game extends Component {
     }
   };
 
+  handleResult = () => {
+    this.setState({ responded: true });
+  };
+
   render() {
     const {
       category,
       question,
       alternatives,
       correctAnswer,
-      difficulty } = this.state;
+      difficulty,
+      responded } = this.state;
     return (
       <div>
         <Header />
@@ -75,9 +81,11 @@ class Game extends Component {
                 if (alternative === correctAnswer) {
                   return (
                     <button
+                      className={ responded && 'correct-answer' }
                       key={ alternative }
                       type="button"
                       data-testid="correct-answer"
+                      onClick={ this.handleResult }
                     >
                       {alternative}
                     </button>
@@ -85,9 +93,11 @@ class Game extends Component {
                 }
                 return (
                   <button
+                    className={ responded && 'incorrect-answer' }
                     key={ alternative }
                     type="button"
                     data-testid={ `wrong-answer-${index}` }
+                    onClick={ this.handleResult }
                   >
                     {alternative}
                   </button>
