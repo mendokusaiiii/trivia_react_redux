@@ -25,6 +25,18 @@ class Game extends Component {
     const { dispatch } = this.props;
     dispatch(fetchAPIAnswer())
       .then(() => { this.handleQuestion(); });
+    this.timer();
+  }
+
+  componentDidUpdate() {
+    const { history, responseCode } = this.props;
+    if (responseCode === INVALID_TOKEN_CODE) {
+      localStorage.setItem('token', '');
+      history.push('/');
+    }
+  }
+
+  timer = () => {
     const idSet = setInterval(() => {
       this.setState((prevState) => ({
         timer: prevState.timer - 1,
@@ -36,15 +48,7 @@ class Game extends Component {
         }
       });
     }, TIMER_TIME);
-  }
-
-  componentDidUpdate() {
-    const { history, responseCode } = this.props;
-    if (responseCode === INVALID_TOKEN_CODE) {
-      localStorage.setItem('token', '');
-      history.push('/');
-    }
-  }
+  };
 
   handleQuestion = () => {
     const { results } = this.props;
