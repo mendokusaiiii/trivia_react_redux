@@ -29,3 +29,10 @@ export const fetchAPIAnswer = () => async (dispatch) => {
     dispatch(answerAPIError(error.message));
   }
 };
+
+export const SUM_SCORE = 'SUM_SCORE';
+
+export const sumScore = (score) => ({
+  type: SUM_SCORE,
+  score,
+});

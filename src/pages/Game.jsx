@@ -2,11 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
-import { fetchAPIAnswer } from '../redux/action';
+import { fetchAPIAnswer, sumScore } from '../redux/action';
 
 const INVALID_TOKEN_CODE = 3;
 // const NUMBER_OF_QUESTIONS = 5;
 const TIMER_TIME = 1000;
+const MINIMUM_GAIN = 10;
+const HARD_GAIN = 3;
 
 class Game extends Component {
   state = {
@@ -17,7 +19,6 @@ class Game extends Component {
     difficulty: '',
     correctAnswer: '',
     responded: false,
-    isQuestionsDisabled: false,
     timer: 30,
   };
 
@@ -44,7 +45,7 @@ class Game extends Component {
         const { timer, responded } = this.state;
         if (timer === 0 || responded) {
           clearInterval(idSet);
-          this.setState({ isQuestionsDisabled: true, responded: true });
+          this.setState({ responded: true });
         }
       });
     }, TIMER_TIME);
@@ -74,8 +75,23 @@ class Game extends Component {
     }
   };
 
-  handleResult = () => {
-    this.setState({ responded: true, isQuestionsDisabled: true });
+  handleResult = ({ target: { id } }) => {
+    this.setState({ responded: true });
+    if (id === 'correct-answer') {
+      const { dispatch } = this.props;
+      const { difficulty, timer } = this.state;
+      let total = MINIMUM_GAIN;
+      switch (difficulty) {
+      case 'hard': total += (HARD_GAIN * timer);
+        break;
+      case 'medium': total += (2 * timer);
+        break;
+      case 'easy': total += timer;
+        break;
+      default: return;
+      }
+      dispatch(sumScore(total));
+    }
   };
 
   render() {
@@ -86,7 +102,6 @@ class Game extends Component {
       correctAnswer,
       difficulty,
       responded,
-      isQuestionsDisabled,
       timer } = this.state;
     return (
       <div>
@@ -107,7 +122,8 @@ class Game extends Component {
                       type="button"
                       data-testid="correct-answer"
                       onClick={ this.handleResult }
-                      disabled={ isQuestionsDisabled }
+                      disabled={ responded }
+                      id="correct-answer"
                     >
                       {alternative}
                     </button>
@@ -120,7 +136,7 @@ class Game extends Component {
                     type="button"
                     data-testid={ `wrong-answer-${index}` }
                     onClick={ this.handleResult }
-                    disabled={ isQuestionsDisabled }
+                    disabled={ responded }
                   >
                     {alternative}
                   </button>
