@@ -26,7 +26,6 @@ class Game extends Component {
     const { dispatch } = this.props;
     dispatch(fetchAPIAnswer())
       .then(() => { this.handleQuestion(); });
-    this.timer();
   }
 
   componentDidUpdate() {
@@ -72,6 +71,7 @@ class Game extends Component {
         correctAnswer: results[counter].correct_answer,
         alternatives,
       });
+      this.timer();
     }
   };
 
@@ -92,6 +92,14 @@ class Game extends Component {
       }
       dispatch(sumScore(total));
     }
+  };
+
+  nextQuestion = () => {
+    this.setState((prevState) => ({
+      counter: prevState.counter + 1,
+      timer: 30,
+      responded: false,
+    }), this.handleQuestion);
   };
 
   render() {
@@ -144,6 +152,15 @@ class Game extends Component {
               })
             }
           </div>
+          {responded && (
+            <button
+              type="button"
+              data-testid="btn-next"
+              onClick={ this.nextQuestion }
+            >
+              Next
+            </button>
+          )}
         </div>
       </div>
     );
