@@ -4,6 +4,7 @@ import './App.css';
 import Login from './pages/Login';
 import Game from './pages/Game';
 import Settings from './pages/Settings';
+import Feedback from './pages/Feedback';
 
 export default function App() {
   return (
@@ -22,6 +23,11 @@ export default function App() {
         exact
         path="/settings"
         render={ (props) => <Settings { ...props } /> }
+      />
+      <Route
+        exact
+        path="/feedback"
+        render={ (props) => <Feedback { ...props } /> }
       />
     </Switch>
   );
