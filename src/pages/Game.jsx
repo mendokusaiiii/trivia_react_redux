@@ -6,6 +6,7 @@ import { fetchAPIAnswer } from '../redux/action';
 
 const INVALID_TOKEN_CODE = 3;
 // const NUMBER_OF_QUESTIONS = 5;
+const TIMER_TIME = 1000;
 
 class Game extends Component {
   state = {
@@ -16,12 +17,15 @@ class Game extends Component {
     difficulty: '',
     correctAnswer: '',
     responded: false,
+    isQuestionsDisabled: false,
+    timer: 30,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(fetchAPIAnswer())
       .then(() => { this.handleQuestion(); });
+    this.timer();
   }
 
   componentDidUpdate() {
@@ -31,6 +35,20 @@ class Game extends Component {
       history.push('/');
     }
   }
+
+  timer = () => {
+    const idSet = setInterval(() => {
+      this.setState((prevState) => ({
+        timer: prevState.timer - 1,
+      }), () => {
+        const { timer, responded } = this.state;
+        if (timer === 0 || responded) {
+          clearInterval(idSet);
+          this.setState({ isQuestionsDisabled: true, responded: true });
+        }
+      });
+    }, TIMER_TIME);
+  };
 
   handleQuestion = () => {
     const { results } = this.props;
@@ -57,7 +75,7 @@ class Game extends Component {
   };
 
   handleResult = () => {
-    this.setState({ responded: true });
+    this.setState({ responded: true, isQuestionsDisabled: true });
   };
 
   render() {
@@ -67,7 +85,9 @@ class Game extends Component {
       alternatives,
       correctAnswer,
       difficulty,
-      responded } = this.state;
+      responded,
+      isQuestionsDisabled,
+      timer } = this.state;
     return (
       <div>
         <Header />
@@ -75,17 +95,19 @@ class Game extends Component {
           <p data-testid="question-category">{category}</p>
           <p data-testid="question-text">{question}</p>
           <p>{difficulty}</p>
+          <h2>{timer}</h2>
           <div data-testid="answer-options">
             {
               alternatives.map((alternative, index) => {
                 if (alternative === correctAnswer) {
                   return (
                     <button
-                      className={ responded && 'correct-answer' }
+                      className={ responded ? 'correct-answer' : '' }
                       key={ alternative }
                       type="button"
                       data-testid="correct-answer"
                       onClick={ this.handleResult }
+                      disabled={ isQuestionsDisabled }
                     >
                       {alternative}
                     </button>
@@ -93,11 +115,12 @@ class Game extends Component {
                 }
                 return (
                   <button
-                    className={ responded && 'incorrect-answer' }
+                    className={ responded ? 'incorrect-answer' : '' }
                     key={ alternative }
                     type="button"
                     data-testid={ `wrong-answer-${index}` }
                     onClick={ this.handleResult }
+                    disabled={ isQuestionsDisabled }
                   >
                     {alternative}
                   </button>
