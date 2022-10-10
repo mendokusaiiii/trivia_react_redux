@@ -6,12 +6,22 @@ import { fetchAPIAnswer } from '../redux/action';
 
 const INVALID_TOKEN_CODE = 3;
 // const NUMBER_OF_QUESTIONS = 5;
-const VALOR_INICIAL = -1;
 
 class Game extends Component {
+  state = {
+    category: '',
+    question: '',
+    alternatives: [],
+    counter: 0,
+    difficulty: '',
+    correctAnswer: '',
+    responded: false,
+  };
+
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchAPIAnswer());
+    dispatch(fetchAPIAnswer())
+      .then(() => { this.handleQuestion(); });
   }
 
   componentDidUpdate() {
@@ -22,61 +32,80 @@ class Game extends Component {
     }
   }
 
-  render() {
-    let index = VALOR_INICIAL;
+  handleQuestion = () => {
     const { results } = this.props;
-    const counter = 0;
-    let alternatives = [];
-    // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array randomizar um array
+    const { counter } = this.state;
     if (results[counter]) {
-      alternatives = [
-        results[counter].correct_answer, ...results[counter].incorrect_answers,
+      const alternatives = [
+        results[counter].correct_answer,
+        ...results[counter].incorrect_answers,
       ];
+      // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array randomizar um array
       for (let i = alternatives.length - 1; i > 0; i -= 1) {
         const j = Math.floor(Math.random() * (i + 1));
         [alternatives[i], alternatives[j]] = [alternatives[j], alternatives[i]];
       }
-    }
 
+      this.setState({
+        category: results[counter].category,
+        question: results[counter].question,
+        difficulty: results[counter].difficulty,
+        correctAnswer: results[counter].correct_answer,
+        alternatives,
+      });
+    }
+  };
+
+  handleResult = () => {
+    this.setState({ responded: true });
+  };
+
+  render() {
+    const {
+      category,
+      question,
+      alternatives,
+      correctAnswer,
+      difficulty,
+      responded } = this.state;
     return (
       <div>
         <Header />
-        {
-          results[counter] && (
-            <div>
-              <p data-testid="question-category">{results[counter].category}</p>
-              <p data-testid="question-text">{results[counter].question}</p>
-              <p>{results[counter].difficulty}</p>
-              <div data-testid="answer-options">
-                {results && (
-                  alternatives.map((alternative) => {
-                    if (alternative === results[counter].correct_answer) {
-                      return (
-                        <button
-                          key={ alternative }
-                          type="button"
-                          data-testid="correct-answer"
-                        >
-                          {alternative}
-                        </button>
-                      );
-                    }
-                    index += 1;
-                    return (
-                      <button
-                        key={ alternative }
-                        type="button"
-                        data-testid={ `wrong-answer-${index}` }
-                      >
-                        {alternative}
-                      </button>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-          )
-        }
+        <div>
+          <p data-testid="question-category">{category}</p>
+          <p data-testid="question-text">{question}</p>
+          <p>{difficulty}</p>
+          <div data-testid="answer-options">
+            {
+              alternatives.map((alternative, index) => {
+                if (alternative === correctAnswer) {
+                  return (
+                    <button
+                      className={ responded && 'correct-answer' }
+                      key={ alternative }
+                      type="button"
+                      data-testid="correct-answer"
+                      onClick={ this.handleResult }
+                    >
+                      {alternative}
+                    </button>
+                  );
+                }
+                return (
+                  <button
+                    className={ responded && 'incorrect-answer' }
+                    key={ alternative }
+                    type="button"
+                    data-testid={ `wrong-answer-${index}` }
+                    onClick={ this.handleResult }
+                  >
+                    {alternative}
+                  </button>
+                );
+              })
+            }
+          </div>
+        </div>
       </div>
     );
   }
