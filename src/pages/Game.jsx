@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import { fetchAPIAnswer, sumScore } from '../redux/action';
 
 const INVALID_TOKEN_CODE = 3;
-// const NUMBER_OF_QUESTIONS = 5;
+const NUMBER_OF_QUESTIONS = 4;
 const TIMER_TIME = 1000;
 const MINIMUM_GAIN = 10;
 const HARD_GAIN = 3;
@@ -95,6 +95,9 @@ class Game extends Component {
   };
 
   nextQuestion = () => {
+    const { counter } = this.state;
+    const { history } = this.props;
+    if (counter === NUMBER_OF_QUESTIONS) history.push('/feedback');
     this.setState((prevState) => ({
       counter: prevState.counter + 1,
       timer: 30,
