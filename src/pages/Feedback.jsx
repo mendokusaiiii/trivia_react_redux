@@ -39,7 +39,8 @@ class Feedback extends React.Component {
           onClick={ this.handleRanking }
         >
           Ranking
-          
+        </button>
+        <button
           data-testid="btn-play-again"
           type="button"
           onClick={ this.playAgain }
