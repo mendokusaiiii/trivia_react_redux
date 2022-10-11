@@ -36,3 +36,11 @@ export const sumScore = (score) => ({
   type: SUM_SCORE,
   score,
 });
+
+export const RESET_SCOREBOARD = 'RESET_SCOREBOARD';
+export const resetScoreboard = (reset) => ({
+  type: RESET_SCOREBOARD,
+  payload: {
+    reset,
+  },
+});
