@@ -97,7 +97,31 @@ class Game extends Component {
   nextQuestion = () => {
     const { counter } = this.state;
     const { history } = this.props;
-    if (counter === NUMBER_OF_QUESTIONS) history.push('/feedback');
+    if (counter === NUMBER_OF_QUESTIONS) {
+      const { name, score, gravatarEmail } = this.props;
+      const oldRanking = JSON.parse(localStorage.getItem('players'));
+      if (oldRanking) {
+        const addNewPlayer = [
+          ...oldRanking,
+          {
+            name,
+            gravatarEmail,
+            score,
+          },
+        ];
+        localStorage.setItem('players', JSON.stringify(addNewPlayer));
+      } else {
+        const addNewPlayer = [
+          {
+            name,
+            gravatarEmail,
+            score,
+          },
+        ];
+        localStorage.setItem('players', JSON.stringify(addNewPlayer));
+      }
+      history.push('/feedback');
+    }
     this.setState((prevState) => ({
       counter: prevState.counter + 1,
       timer: 30,
@@ -181,6 +205,9 @@ Game.propTypes = {
 const mapStateToProps = (state) => ({
   responseCode: state.questions.response_code,
   results: state.questions.results,
+  name: state.player.name,
+  score: state.player.score,
+  gravatarEmail: state.player.gravatarEmail,
 });
 
 export default connect(mapStateToProps)(Game);
