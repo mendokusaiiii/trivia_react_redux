@@ -10,6 +10,7 @@ class Feedback extends React.Component {
   handleRanking = () => {
     const { history } = this.props;
     history.push('/ranking');
+  };
 
   playAgain = () => {
     const { history } = this.props;
