@@ -17,7 +17,7 @@ const playerReducer = (state = INITIAL_STATE, action) => {
   case SUM_SCORE:
     return {
       ...state,
-      score: action.score,
+      score: action.score + state.score,
     };
   default: return state;
   }

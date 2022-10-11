@@ -17,7 +17,7 @@ class Feedback extends React.Component {
         </div>
         <h3 data-testid="feedback-text">
           {
-            QUESTIONS <= assertions ? 'Could be better...' : 'Well Done!'
+            QUESTIONS >= assertions ? 'Could be better...' : 'Well Done!'
           }
         </h3>
       </div>
