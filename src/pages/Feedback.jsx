@@ -6,7 +6,6 @@ import Header from '../components/Header';
 const QUESTIONS = 3;
 
 class Feedback extends React.Component {
-
   handleRanking = () => {
     const { history } = this.props;
     history.push('/ranking');
@@ -46,7 +45,6 @@ class Feedback extends React.Component {
           onClick={ this.playAgain }
         >
           Play Again
-          
         </button>
       </div>
     );
