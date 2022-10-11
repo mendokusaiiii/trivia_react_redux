@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { resetScoreboard as resetScoreboardAction } from '../redux/action';
+import { resetScoreboard } from '../redux/action';
 
 class Ranking extends React.Component {
   state = {
@@ -9,9 +9,9 @@ class Ranking extends React.Component {
   };
 
   handleHome = () => {
-    const { history } = this.props;
+    const { history, dispatch } = this.props;
+    dispatch(resetScoreboard());
     history.push('/');
-    resetScoreboardAction(0);
   };
 
   render() {
@@ -33,8 +33,4 @@ Ranking.propTypes = {
   history: PropTypes.object,
 }.isRequired;
 
-const mapDispatchToProps = (dispatch) => ({
-  resetScoreboard: (reset) => dispatch(resetScoreboardAction(reset)),
-});
-
-export default connect(null, mapDispatchToProps)(Ranking);
+export default connect()(Ranking);
