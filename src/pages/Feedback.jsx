@@ -6,6 +6,11 @@ import Header from '../components/Header';
 const QUESTIONS = 3;
 
 class Feedback extends React.Component {
+  playAgain = () => {
+    const { history } = this.props;
+    history.push('/');
+  };
+
   render() {
     const { score, assertions } = this.props;
     return (
@@ -22,6 +27,13 @@ class Feedback extends React.Component {
             assertions >= QUESTIONS ? 'Well Done!' : 'Could be better...'
           }
         </h3>
+        <button
+          data-testid="btn-play-again"
+          type="button"
+          onClick={ this.playAgain }
+        >
+          Play Again
+        </button>
       </div>
     );
   }
